@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+       
+    <meta charset="UTF-8" />
+
+       
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+       
+    <title>Syalwa's Creative Studio</title>
+
+       
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+       
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+       
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
+
+       
+    <style>
+        :root {
+            --pink-soft: #fce4ec;
+
+            --pink-dark: #e91e63;
+
+            --text-dark: #4a4a4a;
+
+            --text-light: #ffffff;
+
+            --bg-main: #fffafc;
+
+            --border-color: #fce4ec;
+
+            --font-heading: "Nunito", sans-serif;
+
+            --font-body: "Nunito", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+
+            background-image: linear-gradient(to top, #fde7f0 0%, #fffafc 100%);
+
+            color: var(--text-dark);
+
+            margin: 0;
+
+            padding: 20px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+
+            max-width: 900px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-heading);
+
+            font-weight: 800;
+
+            color: var(--pink-dark);
+
+            text-align: center;
+
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-size: 3em;
+
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: var(--text-light);
+
+            border: 2px solid var(--border-color);
+
+            border-radius: 16px;
+
+            padding: 30px;
+
+            margin-bottom: 30px;
+
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.08);
+        }
+
+        .action-button {
+            background-image: linear-gradient(45deg, var(--pink-dark), #f06292);
+
+            color: white;
+
+            padding: 12px 25px;
+
+            border: none;
+
+            border-radius: 50px;
+
+            cursor: pointer;
+
+            font-size: 1.1em;
+
+            font-weight: 700;
+
+            transition: all 0.3s ease;
+
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+
+            font-family: var(--font-body);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .action-button:disabled {
+            background-image: linear-gradient(45deg, #c5c5c5, #a3a3a3);
+
+            cursor: not-allowed;
+
+            box-shadow: none;
+        }
+
+        #camera-section,
+        #customization-page {
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+        }
+
+        #webcam-feed {
+            border: 4px solid var(--pink-soft);
+
+            border-radius: 8px;
+
+            margin-top: 15px;
+
+            background-color: #000;
+        }
+
+        #photo-results {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            justify-content: center;
+
+            margin-top: 20px;
+
+            min-height: 100px;
+
+            background-color: var(--pink-soft);
+
+            padding: 15px;
+
+            border-radius: 8px;
+        }
+
+        #photo-results img {
+            width: 100px;
+
+            height: 75px;
+
+            object-fit: cover;
+
+            border: 3px solid white;
+
+            border-radius: 4px;
+        }
+
+        #flash-overlay {
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: white;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            z-index: 9999;
+        }
+
+        #customization-area {
+            display: flex;
+
+            gap: 20px;
+
+            margin-top: 20px;
+
+            align-items: flex-start;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+        }
+
+        #preview-canvas {
+            border: 2px dashed var(--pink-medium);
+
+            cursor: crosshair;
+        }
+
+        #sticker-palette {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+        #sticker-palette img {
+            width: 60px;
+
+            height: 60px;
+
+            cursor: pointer;
+
+            border: 3px solid transparent;
+
+            border-radius: 8px;
+
+            padding: 5px;
+
+            transition: all 0.2s ease;
+        }
+
+        #sticker-palette img.selected {
+            border-color: var(--pink-dark);
+
+            background-color: var(--pink-soft);
+
+            transform: scale(1.1);
+        }
+
+        #filter-palette {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+
+            font-size: 0.9em;
+
+            background-image: linear-gradient(45deg, #e0e0e0, #bdbdbd);
+
+            /* Warna abu-abu untuk yang tidak aktif */
+        }
+
+        .filter-btn.selected {
+            background-image: linear-gradient(45deg, var(--pink-dark), #f06292);
+
+            /* Warna pink untuk yang aktif */
+        }
+
+        .photostrip-card {
+            border: none;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+        .photostrip-card h3 {
+            margin-top: 0;
+
+            color: var(--pink-dark);
+
+            font-size: 1.5em;
+        }
+
+        .photostrip-card>img {
+            width: 100%;
+
+            max-width: 480px;
+
+            border-radius: 8px;
+
+            margin-top: 10px;
+
+            border: 1px solid #f0f0f0;
+        }
+
+        .form-group {
+            width: 100%;
+
+            max-width: 400px;
+
+            margin: 20px auto 0 auto;
+
+            text-align: left;
+        }
+
+        .form-group label {
+            font-weight: 700;
+        }
+
+        .form-group input[type="color"] {
+            width: 100%;
+
+            height: 40px;
+
+            padding: 0;
+
+            border: none;
+
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+       
+    <main>
+               
+        <h1>Syalwa's Creative Studio</h1>
+
+               
+        <div id="main-content" class="card"></div>
+
+               
+        <div id="gallery-section" class="card">
+                       
+            <h2>Galeri Karyamu</h2>
+
+                       
+            <div id="gallery-container">Memuat data...</div>
+
+                   
+        </div>
+
+           
+    </main>
+
+       
+    <div id="flash-overlay"></div>
+
+       
+    <script>
+        // --- Referensi Elemen & State ---
+        const mainContent = document.getElementById('main-content');
+        const galleryContainer = document.getElementById('gallery-container');
+        const flashOverlay = document.getElementById('flash-overlay');
+        const galleryApiUrl = 'http://localhost:8080/api/photostrips';
+        const sessionApiUrl = 'http://localhost:8080/api/sessions';
+        let capturedPhotos = [];
+        let currentSessionId = null;
+        const maxPhotos = 4;
+
+        // --- Template HTML ---
+        const cameraViewTemplate = `
+            <div id="camera-section">
+                <h2 id="camera-title">Kamera</h2>
+                <video id="webcam-feed" width="480" height="360" autoplay muted style="display: none;"></video>
+                <canvas id="snapshot-canvas" width="480" height="360" style="display: none;"></canvas>
+                <br>
+                <button id="start-camera-btn" class="action-button">Mulai Sesi Foto</button>
+                <button id="take-photo-btn" class="action-button" style="display: none;">Jepret!</button>
+                <h3>Hasil Foto Sesi Ini:</h3>
+                <div id="photo-results"></div>
+            </div>`;
+
+        const customizationViewTemplate = `
+            <div id="customization-page">
+                <h2 id="custom-title">Hias Photo Strip-mu!</h2>
+                <p style="text-align: center;">Pilih warna, filter, atau stiker, lalu klik pada pratinjau untuk menempel.</p>
+                <div id="customization-area">
+                    <canvas id="preview-canvas"></canvas>
+                    <div>
+                        <div class="form-group">
+                            <label for="frameColorPicker">Warna Bingkai:</label>
+                            <input type="color" id="frameColorPicker" value="#fce4ec">
+                        </div>
+                        <div id="filter-palette" style="margin-top: 20px;">
+                            <p><strong>Filter:</strong></p>
+                            <button class="filter-btn action-button" data-filter="none">Normal</button>
+                            <button class="filter-btn action-button" data-filter="grayscale(100%)">B&W</button>
+                            <button class="filter-btn action-button" data-filter="sepia(100%)">Sepia</button>
+                        </div>
+                        <div id="sticker-palette" style="margin-top: 20px;">
+                            <p><strong>Stiker:</strong></p>
+                            <img src="/images/cat_paw.png" data-sticker-id="cat_paw">
+                            <img src="/images/lov1.png" data-sticker-id="lov1">
+                            <img src="/images/star1.png" data-sticker-id="star1">
+                            <img src="/images/cat.png" data-sticker-id="cat">
+                            <img src="/images/lov2.png" data-sticker-id="lov2">
+                            <img src="/images/star2.png" data-sticker-id="star2">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <button id="finish-btn" class="action-button">Selesaikan & Simpan</button>
+            </div>`;
+
+        // --- Fungsi-Fungsi Aplikasi ---
+
+        function dataURLtoFile(dataurl, filename) {
+            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while (n--) { u8arr[n] = bstr.charCodeAt(n); }
+            return new File([u8arr], filename, { type: mime });
+        }
+
+        function showCameraView() {
+            capturedPhotos = []; // Reset foto setiap kali mulai sesi kamera baru
+            mainContent.innerHTML = cameraViewTemplate;
+
+            const startCameraBtn = document.getElementById('start-camera-btn');
+            const takePhotoBtn = document.getElementById('take-photo-btn');
+            const videoElement = document.getElementById('webcam-feed');
+            const canvasElement = document.getElementById('snapshot-canvas');
+            const photoResultsContainer = document.getElementById('photo-results');
+
+            startCameraBtn.addEventListener('click', async () => {
+                startCameraBtn.disabled = true;
+                try {
+                    const response = await fetch(`${sessionApiUrl}/start`, { method: 'POST' });
+                    const session = await response.json();
+                    currentSessionId = session.sessionId;
+                    videoElement.style.transform = 'scaleX(-1)';
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    videoElement.srcObject = stream;
+                    videoElement.style.display = 'block';
+                    startCameraBtn.style.display = 'none';
+                    takePhotoBtn.style.display = 'inline-block';
+                } catch (error) {
+                    alert("Gagal memulai sesi baru, sayang. Pastikan backend berjalan ya.");
+                    startCameraBtn.disabled = false;
+                }
+            });
+
+            takePhotoBtn.addEventListener('click', () => {
+                if (capturedPhotos.length >= maxPhotos) return;
+                flashOverlay.style.opacity = 1;
+                setTimeout(() => { flashOverlay.style.opacity = 0; }, 150);
+                const context = canvasElement.getContext('2d');
+                context.translate(canvasElement.width, 0);
+                context.scale(-1, 1);
+                context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                context.setTransform(1, 0, 0, 1, 0, 0);
+                const imageDataUrl = canvasElement.toDataURL('image/jpeg');
+                capturedPhotos.push(imageDataUrl);
+                const img = document.createElement('img');
+                img.src = imageDataUrl;
+                photoResultsContainer.appendChild(img);
+                if (capturedPhotos.length >= maxPhotos) {
+                    takePhotoBtn.style.display = 'none';
+                    if (videoElement.srcObject) videoElement.srcObject.getTracks().forEach(track => track.stop());
+                    videoElement.style.display = 'none';
+                    showCustomizationView();
+                }
+            });
+        }
+
+        function showCustomizationView() {
+            mainContent.innerHTML = customizationViewTemplate;
+
+            const previewCanvas = document.getElementById('preview-canvas');
+            const context = previewCanvas.getContext('2d');
+            const stickerPalette = document.getElementById('sticker-palette');
+            const stickers = stickerPalette.querySelectorAll('img');
+            const finishBtn = document.getElementById('finish-btn');
+            const colorPicker = document.getElementById('frameColorPicker');
+            const filterPalette = document.getElementById('filter-palette');
+            const filterButtons = filterPalette.querySelectorAll('.filter-btn');
+
+            let placedStickers = [];
+            let selectedStickerImage = null;
+            let selectedFilter = 'none';
+
+            const stripWidth = 480, stripHeight = 1300, margin = 20;
+            previewCanvas.width = stripWidth;
+            previewCanvas.height = stripHeight;
+
+            function redrawPreview() {
+                context.filter = selectedFilter;
+                context.fillStyle = colorPicker.value;
+                context.fillRect(0, 0, stripWidth, stripHeight);
+                let currentY = margin;
+                capturedPhotos.forEach(dataUrl => {
+                    const img = new Image();
+                    img.src = dataUrl; // Set src dulu agar bisa dapat width/height
+                    const photoWidth = stripWidth - (margin * 2);
+                    const photoHeight = (img.height / img.width) * photoWidth;
+                    context.drawImage(img, margin, currentY, photoWidth, photoHeight);
+                    currentY += photoHeight + margin;
+                });
+                placedStickers.forEach(s => {
+                    context.drawImage(s.img, s.x - (s.size / 2), s.y - (s.size / 2), s.size, s.size);
+                });
+            }
+
+            redrawPreview();
+            colorPicker.addEventListener('input', redrawPreview);
+
+            filterButtons.forEach(button => {
+                if (button.dataset.filter === 'none') button.classList.add('selected');
+                button.addEventListener('click', function () {
+                    filterButtons.forEach(btn => btn.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedFilter = this.dataset.filter;
+                    redrawPreview();
+                });
+            });
+
+            stickers.forEach(sticker => {
+                sticker.addEventListener('click', function () {
+                    stickers.forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedStickerImage = this;
+                });
+            });
+
+            previewCanvas.addEventListener('click', event => {
+                if (!selectedStickerImage) return;
+                const rect = previewCanvas.getBoundingClientRect();
+                const x = event.clientX - rect.left, y = event.clientY - rect.top, stickerSize = 60;
+                context.drawImage(selectedStickerImage, x - (stickerSize / 2), y - (stickerSize / 2), stickerSize, stickerSize);
+                placedStickers.push({
+                    img: selectedStickerImage, stickerId: selectedStickerImage.dataset.stickerId,
+                    x: Math.round(x), y: Math.round(y), size: stickerSize,
+                    sizeRatio: 1.0, rotation: 0
+                });
+            });
+
+            finishBtn.addEventListener('click', async () => {
+                finishBtn.disabled = true;
+                finishBtn.textContent = 'Memproses...';
+                try {
+                    const uploadPromises = capturedPhotos.map((dataUrl, index) => {
+                        const photoFile = dataURLtoFile(dataUrl, `photo_${index}.jpg`);
+                        const formData = new FormData();
+                        formData.append('photo', photoFile);
+                        return fetch(`${sessionApiUrl}/${currentSessionId}/photos`, { method: 'POST', body: formData }).then(res => res.text());
+                    });
+                    await Promise.all(uploadPromises);
+
+                    const finalStickers = placedStickers.map(s => ({
+                        stickerId: s.stickerId, positionX: s.x, positionY: s.y,
+                        size: s.sizeRatio, rotation: s.rotation
+                    }));
+
+                    const finalData = { frameColor: colorPicker.value, stickers: finalStickers };
+
+                    const finishUrl = `${sessionApiUrl}/${currentSessionId}/finish`;
+                    const response = await fetch(finishUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(finalData)
+                    });
+                    if (!response.ok) throw new Error('Gagal memproses strip!');
+
+                    await response.json();
+                    alert('Yey! Karya senimu berhasil dibuat! Halaman akan dimuat ulang.');
+                    window.location.reload();
+                } catch (error) {
+                    alert('Waduh, ada kesalahan saat memproses karyamu, sayang.');
+                    finishBtn.disabled = false;
+                    finishBtn.textContent = 'Selesaikan & Simpan';
+                }
+            });
+        }
+
+        function fetchAndDisplayPhotoStrips() {
+            galleryContainer.innerHTML = '<p>Memuat galeri...</p>';
+            fetch(galleryApiUrl).then(response => response.json())
+                .then(data => {
+                    galleryContainer.innerHTML = '';
+                    if (!data || data.length === 0) { galleryContainer.innerHTML = '<p>Galeri masih kosong.</p>'; return; }
+                    data.forEach(photostrip => {
+                        const card = document.createElement('div');
+                        card.className = 'photostrip-card';
+
+                        const imageUrl = photostrip.finalStripUrl;
+
+                        // Kita akan bangun isi kartunya di sini
+                        let cardContent = `<h3>${photostrip.creatorName || 'Karya'}</h3>`;
+
+                        if (imageUrl) {
+                            // Tambahkan gambar jika alamatnya ada
+                            cardContent += `<img src="${imageUrl}" alt="Hasil Photo Strip">`;
+
+                            // --- INI BAGIAN YANG KEMBALI, SAYANG ---
+                            cardContent += `
+            <br>
+            <a href="${imageUrl}" download="photostrip_${photostrip.id}.png" class="action-button" style="margin-top: 15px; display: inline-block; text-decoration: none;">
+                Download Hasil
+            </a>
+        `;
+                        }
+
+                        card.innerHTML = cardContent;
+                        galleryContainer.appendChild(card);
+                    });
+                }).catch(error => { galleryContainer.innerHTML = '<p>Gagal memuat galeri.</p>'; });
+        }
+
+        // Inisialisasi Aplikasi
+        showCameraView();
+        fetchAndDisplayPhotoStrips();
+    </script>
+</body>
+
+</html>
