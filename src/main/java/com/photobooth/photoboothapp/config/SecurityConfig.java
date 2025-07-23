@@ -12,27 +12,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Kita tidak lagi menyuntikkan UserService di sini, Spring Security akan menemukannya secara otomatis
-    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable()) // Nonaktifkan CSRF untuk kemudahan
             .authorizeHttpRequests(auth -> auth
                 // Izinkan semua orang mengakses pintu registrasi, halaman login, dan file-file dasar
-                .requestMatchers("/api/auth/**", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/api/auth/**", "/login.html", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                 // Untuk semua halaman atau API lain, pengguna harus sudah login
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-            .loginPage("/login.html") // <-- Arahkan ke file HTML kita
-            .loginProcessingUrl("/login") // Biarkan Spring yang menangani proses login
-            .defaultSuccessUrl("/index.html", true) // Jika login sukses, arahkan ke studio
-            .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout") // URL untuk logout
-                .logoutSuccessUrl("/login.html") // Setelah logout, arahkan ke halaman login
+                .loginPage("/login.html") // Tentukan halaman login kustom kita
+                .loginProcessingUrl("/login") // Biarkan Spring yang menangani proses login
+                .defaultSuccessUrl("/index.html", true) // Jika sukses, arahkan ke studio
                 .permitAll()
             );
 

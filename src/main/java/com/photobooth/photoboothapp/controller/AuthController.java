@@ -17,8 +17,6 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // Pintu untuk mendaftarkan pengguna baru
-    // Merespon ke POST http://localhost:8080/api/auth/register
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {

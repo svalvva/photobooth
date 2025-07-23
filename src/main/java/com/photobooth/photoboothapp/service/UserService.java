@@ -19,8 +19,8 @@ public class UserService implements UserDetailsService {
 
     // Menggunakan "Constructor Injection" yang modern dan rapi
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository; // Ini untuk mengakses data pengguna dari database
-        this.passwordEncoder = passwordEncoder; // enkripsi password sebelum disimpan
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
