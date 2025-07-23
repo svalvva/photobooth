@@ -1,33 +1,41 @@
 package com.photobooth.photoboothapp.config;
 
-// import com.photobooth.photoboothapp.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-// import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // 1. Membuat "Mesin Pengacak Password"
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // 2. Menentukan Aturan Keamanan untuk Setiap "Pintu"
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Nonaktifkan CSRF untuk kemudahan
+            .csrf(csrf -> csrf.disable()) // Kita nonaktifkan CSRF untuk sementara agar lebih mudah
             .authorizeHttpRequests(auth -> auth
-                // Izinkan semua orang mengakses pintu registrasi, halaman login, dan file-file dasar
-                .requestMatchers("/api/auth/**", "/login.html", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                // Untuk semua halaman atau API lain, pengguna harus sudah login
+                // Izinkan semua orang (tanpa login) untuk mengakses halaman utama & galeri
+                .requestMatchers("/", "/index.html", "/images/**", "/api/photostrips/**").permitAll()
+                // Izinkan semua orang untuk mencoba memulai sesi foto
+                .requestMatchers("/api/sessions/**").permitAll() 
+                // Semua permintaan lain harus sudah login (terotentikasi)
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login.html") // Tentukan halaman login kustom kita
-                .loginProcessingUrl("/login") // Biarkan Spring yang menangani proses login
-                .defaultSuccessUrl("/index.html", true) // Jika sukses, arahkan ke studio
-                .permitAll()
-            );
+                // Gunakan halaman login bawaan dari Spring Security
+                .loginPage("/login").permitAll()
+            )
+            .logout(logout -> logout.permitAll());
 
         return http.build();
     }
