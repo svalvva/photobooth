@@ -12,11 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 1. Membuat "Mesin Pengacak Password"
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     // 2. Menentukan Aturan Keamanan untuk Setiap "Pintu"
     @Bean
